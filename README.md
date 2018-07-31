@@ -4,7 +4,7 @@
 
 <a href="https://leanpub.com/fljs"><img src="manuscript/images/marketing/front-cover-small.png" width="25%" align="right" hspace="20" vspace="20" title="Functional-Light JavaScript" alt="Capa do livro"></a>
 
-Esse livro é uma visão balanceada e pragmatica sobre FP em JavaScript. A primeira edição está completa. Leia online aqui **de graçae**, ou:
+Esse livro é uma visão balanceada e pragmatica sobre FP em JavaScript. A primeira edição está completa. Leia online aqui **de graça**, ou:
 
 <p align="center">
     <a href="https://leanpub.com/fljs"><img src="https://img.shields.io/badge/Buy-Leanpub-yellow.svg" title="Compre pelo Leanpub" alt="Compre pelo Leanpub"></a> <a href="http://amazon.fljsbook.com"><img src="https://img.shields.io/badge/Buy-Amazon-yellow.svg" title="Compre pela Amazon" alt="Compre pela Amazon"></a>
@@ -12,7 +12,7 @@ Esse livro é uma visão balanceada e pragmatica sobre FP em JavaScript. A prime
 
 O "Functional-Light JavaScript" explora os principios básicos de programação funcional (FP) os aplicando ao JavaScript. Mas, o que torna esse livro diferente é a abordagem a esses principios sem o afundamento em toda a sua terminologia complexa, tratando um sub-conjunto de conceitos de base de programação funcional que chamamos de "Functional-Light Programming" (FLP) e o aplicando em JavaScript.
 
-**Note:** Apedar da palavra "Light" no título, Esse livro não é recomedando ou considerado como "iniciante", "fácil", or "introdutório" a este tópico. Este livro é rigoroso e cheio de detalhes complicados sendo necessário uma base sólida de conhecimento JS antes de explorado. "Light" significa limitado em escopo, ao invés de ser mais amplo, este livro vai muito mais profundo em cada tópico que você típicamente acharia em outros livros de Javascript Funcional.
+**Nota:** Apesar da palavra "Light" no título, Esse livro não é recomedando ou considerado como "iniciante", "fácil", or "introdutório" a este tópico. Este livro é rigoroso e cheio de detalhes complicados sendo necessário uma base sólida de conhecimento JS antes de explorado. "Light" significa limitado em escopo, ao invés de ser mais amplo, este livro vai muito mais profundo em cada tópico que você típicamente acharia em outros livros de Javascript Funcional.
 
 Convenhamos que a não ser que você já é um membro do grupo descolados da programação funcional (eu não sou!), uma frase como "uma mônada é apenas um monóide na categoria dos endofuntores" não significa nada para nós.
 
@@ -43,6 +43,11 @@ Mas o que eu quero é ser capaz de aplicar alguns principios básicos de FP ao s
 * [Appendix B: A humilde monada](manuscript/apB.md/#appendix-b-the-humble-monad)
 * [Appendix C: Bibliotecas FP](manuscript/apC.md/#appendix-c-fp-libraries)
 
+## Tradução
+
+Este livro ainda está sendo traduzido para o português pelo fork do [Lambda Study Group](https://github.com/lambda-study-group/Functional-Light-JS)!
+Para colaborar você pode criar uma issue especificando quais partes você quer traduzir e em seguida enviar o PR referenciando a issue.
+
 ## Publicação
 
 Esse livro foi publicado [e está disponível para compra no Leanpub](https://leanpub.com/fljs/).
@@ -68,7 +73,7 @@ Qualquer contribuição será **obviamente muito bem apreciada**.
 
 Mas **POR FAVOR** leia o [Guia de contribuições](CONTRIBUTING.md) com cuidado antes de enviar um PR.
 
-## License & Copyright
+## Licensa & Copyright
 
 The materials herein are all (c) 2016-2018 Kyle Simpson.
 
