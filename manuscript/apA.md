@@ -1,21 +1,21 @@
 # Functional-Light JavaScript
-# Appendix A: Transducing
+# Anexo A: Transdução
 
-Transducing is a more advanced technique than we've covered in this book. It extends many of the concepts from [Chapter 9](ch9.md) on list operations.
+Transdução é a técnica mais avançada que vamos abordar neste livro. Ela extende diversos conceitos do [capítulo 9](ch9.md) em operações de lista.
 
-I wouldn't necessarily call this topic strictly "Functional-Light", but more like a bonus on top. I've presented this as an appendix because you might very well need to skip the discussion for now and come back to it once you feel fairly comfortable with -- and make sure you've practiced! -- the main book concepts.
+Eu não necessáriamente chamaria esse tópico de estritamente "Functional-Light", mas mais como um bonus a ser adicionado. Eu apresento este conteúdo como anexo pois você pode tranquilamente pular por agora e voltar quando se sentir perfeitamente confortável, e tendo praticado bastante, os principais conceitos do livro.
 
-To be honest, even after teaching transducing many times, and writing this chapter, I am still trying to fully wrap my brain around this technique. So don't feel bad if it twists you up. Bookmark this appendix and come back when you're ready.
+Para ser honesto, até mesmo após ensinar transdução várias vezes, e após ter escrito esse capítulo, eu estou ainda tentando absorver completamente em meu cerebro esse tecnica. Então não se sinta mal se isso te confundir. Marque esse anexo e volte quando se sentir pronto.
 
-Transducing means transforming with reduction.
+Tradução significa transformar com uma redução.
 
-I know that may sound like a jumble of words that confuses more than it clarifies. But let's take a look at how powerful it can be. I actually think it's one of the best illustrations of what you can do once you grasp the principles of Functional-Light Programming.
+Entendo que soa como palavras que confudem mais do que clarificam. Mas vamos analisar o quão poderoso isso pode ser. Eu penso que é uma das melhores ilustrações de o que você pode fazer quando pegar os principios de Functional-Light Programming.
 
-As with the rest of this book, my approach is to first explain *why*, then *how*, then finally boil it down to a simplified, repeatable *what*. That's often the reverse of how many teach, but I think you'll learn the topic more deeply this way.
+Assim como o resto desse livro, minha abordagem é primeiro explicar *porque*, depois o *como*, e só assim chegar ao simplificado *o que*. Que é usualmente o oposto de como alguns ensinam, mas eu acho é a forma de se aprender mais profundamente.
 
-## Why, First
+## Como e porque
 
-Let's start by extending a [scenario we covered back in Chapter 3](ch3.md/#user-content-shortlongenough), testing words to see if they're short enough and/or long enough:
+Vamos começar extendendo o [cenário que abordamos no capítulo 3](ch3.md/#user-content-shortlongenough), testando palavras pra ver se elas são pequenas o suficiente e/ou longas o suficiente:
 
 ```js
 function isLongEnough(str) {
@@ -27,23 +27,22 @@ function isShortEnough(str) {
 }
 ```
 
-In [Chapter 3, we used these predicate functions](ch3.md/#user-content-shortlongenough) to test a single word. Then in Chapter 9, we learned how to repeat such tests [using list operations like `filter(..)`](ch9.md/#filter). For example:
+No [capítulo 3, nós usamos essas funções predicado](ch3.md/#user-content-shortlongenough) para testar uma única palvra. E em seguida no capítulo 9 nos aprendemos como repetir esses testes [usando operações em lista como `filter(..)`](ch9.md/#filter). Por exemplo:
 
 ```js
-var words = [ "You", "have", "written", "something", "very",
-    "interesting" ];
+var words = [ "Você", "escreveu", "algo", "muito", "interessante" ];
 
 words
 .filter( isLongEnough )
 .filter( isShortEnough );
-// ["written","something"]
+// ["escreveu","muito","interessante"]
 ```
 
-It may not be obvious, but this pattern of separate adjacent list operations has some non-ideal characteristics. When we're dealing with only a single array of a small number of values, everything is fine. But if there were lots of values in the array, each `filter(..)` processing the list separately can slow down a bit more than we'd like.
+Pode não ser obvio, mas esse padrão de separar operações em lista adjacentes tem algumas caracteristicas não ideais. Quando estamos lidando com apenas um array de pequenos numeros ou valores, está tudo certo. Mas quando temos vários valores em um array, cada `filter(..)` processando a lista separadamente pode deixar as coisas um pouco mais lentas do que deveriam.
 
-A similar performance problem arises when our arrays are async/lazy (aka Observables), processing values over time in response to events (see [Chapter 10](ch10.md)). In this scenario, only a single value comes down the event stream at a time, so processing that discrete value with two separate `filter(..)`s function calls isn't really such a big deal.
+Um problema similar de performance começa quando nossos arrays são async/lazy (aka Observables), em que processamos valores com demora para responder os eventos (veja no [capítulo 10](ch10.md)). Nesse cenário, apenas um valor é processado por vez na event stream, então processar valores discretos com duas chamadas de função `filter(..)`s acaba não sendo uma boa ideia.
 
-But what's not obvious is that each `filter(..)` method produces a separate observable. The overhead of pumping a value out of one observable into another can really add up. That's especially true since in these cases, it's not uncommon for thousands or millions of values to be processed; even such small overhead costs add up quickly.
+Mas o que não é obvio é que cada metodo `filter(..)` produz um observable diferente. O overhead the processar esse valor de um observable para outro pode realmente agravar. Isso é principalmente verdade já que nesses casos, não é comum que trocentos milhões de valores sejam processados; até mesmo um pequeno overhead pode aumentar os custos em performance rapidamente.
 
 The other downside is readability, especially when we need to repeat the same series of operations against multiple lists (or Observables). For example:
 
