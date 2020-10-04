@@ -1,82 +1,83 @@
-# Functional-Light JavaScript
-# Chapter 1: Why Functional Programming?
+# JavaScript Funcional-Leve
+# Capítulo 1: Por que Programação Funcional?
 
-> Functional programmer: (noun) One who names variables "x", names functions "f", and names code patterns "zygohistomorphic prepromorphism"
->
-> James Iry @jamesiry 5/13/15
+> Programador funcional: (substantivo) aquele que nomeia as variáveis "x", nomeia as funções "f" e nomeia os padrões de código como "prépromorfismo zigohistomórfico"
+> James Iry @jamesiry 13/05/15
 >
 > https://twitter.com/jamesiry/status/598547781515485184
 
-Functional Programming (FP) is not a new concept by any means. It's been around almost the entire history of programming. However, and I'm not sure it's fair to say, but... it sure hasn't seemed like as mainstream of a concept in the overall developer world until perhaps the last few years. I think FP has more been the realm of academics.
+A Programação Funcional (FP) não é um conceito novo de forma alguma. Está presente em quase toda a história da programação. No entanto, não tenho certeza se é justo dizer, mas... com certeza não parecia ser um conceito muito _mainstream_ no mundo dos desenvolvedores até poucos anos atrás. Acho que a PF é mais o reino dos acadêmicos.
 
-That's all changing, though. A groundswell of interest is growing around FP, not just at the languages level but even in libraries and frameworks. You very well might be reading this text because you've finally realized FP is something you can't ignore any longer. Or maybe you're like me and you've tried to learn FP many times before but struggled to wade through all the terms or mathematical notation.
+Mas isso está mudando. Uma onda de interesse está crescendo em torno da PF, não apenas no nível de linguagens, mas também em bibliotecas e frameworks. Você pode muito bem estar lendo esse texto porque finalmente percebeu que a PF é algo que você não pode mais ignorar. Ou talvez você seja como eu e já tentou aprender PF muitas vezes antes, mas teve dificuldade em entender todos aqueles termos ou notações matemáticas.
 
-This first chapter's purpose is to answer questions like "Why should I use FP style with my code?" and "How does Functional-Light JavaScript compare to what others say about FP?" After we've laid that groundwork, throughout the rest of the book we'll uncover, piece by piece, the techniques and patterns for writing JS in Functional-Light style.
+O objetivo desse primeiro capítulo é responder a perguntas como "Por que eu deveria usar um estilo de PF no meu código?" e "Como JavaScript Funcional-Leve se compara a o que outras pessoas dizem sobre PF?". Depois de estabelecermos essa base, ao longo do resto do livro vamos descobrir, peça por peça, as técnicas e padrões para escrever JS no estilo Funcional-Leve
 
-## At a Glance
+## De Relance
 
-Let's briefly illustrate the notion of "Functional-Light JavaScript" with a before-and-after snapshot of code. Consider:
+Vamos rapidamente ilustrar a noção de "JavaScript Funcional-Leve" com um _snapshot_ de código antes-e-depois. Considere:
 
 ```js
-var numbers = [4,10,0,27,42,17,15,-6,58];
-var faves = [];
-var magicNumber = 0;
+var numeros = [4,10,0,27,42,17,15,-6,58];
+var favoritos = [];
+var numeroMagico = 0;
 
-pickFavoriteNumbers();
-calculateMagicNumber();
-outputMsg();                // The magic number is: 42
+escolherNumerosFavoritos();
+calcularNumeroMagico();
+msgDeSaida();               // O número mágico é: 42
 
 // ***************
 
-function calculateMagicNumber() {
-    for (let fave of faves) {
-        magicNumber = magicNumber + fave;
+function calcularNumeroMagico() {
+    for (let fav of favoritos) {
+        numeroMagico = numeroMagico + fav;
     }
 }
 
-function pickFavoriteNumbers() {
-    for (let num of numbers) {
+function escolherNumerosFavoritos() {
+    for (let num of numeros) {
         if (num >= 10 && num <= 20) {
-            faves.push( num );
+            favoritos.push( num );
         }
     }
 }
 
-function outputMsg() {
-    var msg = `The magic number is: ${magicNumber}`;
+function msgDeSaida() {
+    var msg = `O número mágico é: ${numeroMagico}`;
     console.log( msg );
 }
 ```
 
-Now consider a very different style that accomplishes exactly the same outcome:
+Agora considere um estilo muito diferente que atinge exatamente o mesmo resultado:
 
 ```js
-var sumOnlyFavorites = FP.compose( [
+var somarApenasFavoritos = FP.compose( [
     FP.filterReducer( FP.gte( 10 ) ),
     FP.filterReducer( FP.lte( 20 ) )
-] )( sum );
+] )( somar );
 
-var printMagicNumber = FP.pipe( [
-    FP.reduce( sumOnlyFavorites, 0 ),
-    constructMsg,
+var mostrarNumeroMagico = FP.pipe( [
+    FP.reduce( somarApenasFavoritos, 0 ),
+    construirMensagem,
     console.log
 ] );
 
 var numbers = [4,10,0,27,42,17,15,-6,58];
 
-printMagicNumber( numbers );        // The magic number is: 42
+mostrarNumeroMagico( numbers );        // O número mágico é: 42
 
 // ***************
 
-function sum(x,y) { return x + y; }
-function constructMsg(v) { return `The magic number is: ${v}`; }
+function somar(x,y) { return x + y; }
+function construirMensagem(v) { return `O número mágico é: ${v}`; }
 ```
 
-Once you understand FP and Functional-Light, this is likely how you'd *read* and mentally process that second snippet:
-
-> We're first creating a function called `sumOnlyFavorites(..)` that's a combination of three other functions. We combine two filters, one checking if a value is greater-than-or-equal to 10 and one for less-than-or-equal to 20. Then we include the `sum(..)` reducer in the transducer composition. The resulting `sumOnlyFavorites(..)` function is a reducer that checks if a value passes both filters, and if so, adds the value to an accumulator value.
+Depois que você entende PF e Funcional-Leve, é assim que você provavelmente iria *ler* e processar mentalmente o segundo _snippet_:
+> Primeiro estamos criando uma função chamada `somarApenasFavoritos(..)`, que é uma combinação de outras três funções. Combinamos dois filtros, um verificando se um valor é maior-que-ou-igual a 10, e outro se é menor-ou-igual a 20. Então, incluímos o redutor `somar(..)` na composição do transdutor. A função resultante `somarApenasFavoritos(..)` é um redutor que verifica se o valor passa pelos dois filtros, e em caso positivo, adiciona o valor a um acumulador.
 >
-> Then we make another function called `printMagicNumber(..)` which first reduces a list of numbers using that `sumOnlyFavorites(..)` reducer we just defined, resulting in a sum of only numbers that passed the *favorite* checks. Then `printMagicNumber(..)` pipes that final sum into `constructMsg(..)`, which creates a string value that finally goes into `console.log(..)`.
+> Então, fizemos outra função chamada `mostrarNumeroMagico(..)`, que primeiro reduz a lista de números usando o redutor `somarApenasFavoritos(..)` que acabamos de definir, resultando numa soma de números que passaram as verificações de *favorito*. Então `mostrarNumeroMagico(..)` canaliza aquela soma final para `consturirMensagem(..)`, que cria um valor `string` que finalmente vai para `console.log(..)`.
+
+TODO: continuar daqui
+---
 
 All those moving pieces *speak* to an FP developer in ways that likely seem highly unfamiliar to you right now. This book will help you *speak* that same kind of reasoning so that it's as readable to you as any other code, if not more so!
 
